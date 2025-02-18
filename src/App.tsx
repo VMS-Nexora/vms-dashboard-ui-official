@@ -1,35 +1,91 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.tsx
+import React from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import ExceptionBase from './components/common/ExceptionBase';
+import { ProtectedRoute } from './components/common/ProtectedRotues';
+import GlobalLayout from './components/layout';
+import { AuthProvider } from './contexts/AuthContext';
+import LoginPage from './pages/login/LoginPage';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Import or create placeholder pages for each route
+const Dashboard = () => <div>Dashboard Page</div>;
+const VisitorCheckin = () => <div>Visitor Check-in Page</div>;
+const Appointments = () => <div>Appointments Page</div>;
+const AccessLogs = () => <div>Access Logs Page</div>;
+const SecurityAlerts = () => <div>Security Alerts Page</div>;
+const UserManagement = () => <div>User Management Page</div>;
+const RoleManagement = () => <div>Role Management Page</div>;
 
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <AuthProvider>
+      <Routes>
+        <Route
+          path="/login"
+          element={<LoginPage />}
+        />
 
-export default App
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/"
+            element={<GlobalLayout />}>
+            <Route
+              index
+              element={
+                <Navigate
+                  to="/dashboard"
+                  replace
+                />
+              }
+            />
+            <Route
+              path="dashboard"
+              element={<Dashboard />}
+            />
+            <Route
+              path="visitors"
+              element={<VisitorCheckin />}
+            />
+            <Route
+              path="appointments"
+              element={<Appointments />}
+            />
+            <Route
+              path="access-log"
+              element={<AccessLogs />}
+            />
+            <Route
+              path="security-alerts"
+              element={<SecurityAlerts />}
+            />
+            <Route path="system-management">
+              <Route
+                index
+                element={
+                  <Navigate
+                    to="/system-management/user-management"
+                    replace
+                  />
+                }
+              />
+              <Route
+                path="user-management"
+                element={<UserManagement />}
+              />
+              <Route
+                path="role-management"
+                element={<RoleManagement />}
+              />
+            </Route>
+            <Route
+              path="*"
+              element={<ExceptionBase type="404" />}
+            />
+          </Route>
+        </Route>
+      </Routes>
+    </AuthProvider>
+  );
+};
+
+export default App;
