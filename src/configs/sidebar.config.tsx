@@ -7,7 +7,9 @@ import {
   KeyOutlined,
   SafetyOutlined,
   ScheduleOutlined,
+  ShopOutlined,
   TeamOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 
@@ -52,6 +54,16 @@ export const menuItems: MenuItem[] = [
         key: 'role-management',
         icon: <KeyOutlined />,
         label: 'Role Manage',
+      },
+      {
+        key: 'deparments',
+        icon: <ShopOutlined />,
+        label: 'Departments',
+      },
+      {
+        key: 'cameras',
+        icon: <VideoCameraOutlined />,
+        label: 'Cameras',
       },
     ],
   },

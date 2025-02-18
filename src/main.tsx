@@ -6,7 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
-    <ConfigProvider theme={{ token: { colorPrimary: '#646CFF' } }}>
+    <ConfigProvider
+      theme={{ token: { colorPrimary: '#646CFF', fontSize: 13 } }}>
       <App />
     </ConfigProvider>
   </BrowserRouter>

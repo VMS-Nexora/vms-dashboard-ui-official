@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   DeleteOutlined,
   EditOutlined,
@@ -222,15 +223,9 @@ const UserManagement: React.FC = () => {
         </div>
         <Table
           size="small"
-          columns={columns}
+          columns={columns as any}
           dataSource={mockData}
-          scroll={{ x: 1300, y: 400 }}
-          pagination={{
-            total: mockData.length,
-            pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-          }}
+          scroll={{ x: 'max-content', y: 'calc(100vh - 18rem)' }}
         />
       </div>
     </div>

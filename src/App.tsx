@@ -7,11 +7,12 @@ import GlobalLayout from './components/layout';
 import { AuthProvider } from './contexts/AuthContext';
 import LoginPage from './pages/login/LoginPage';
 import UserManagement from './pages/user-manage';
+import DashboardPage from './pages/dashboard';
+import AppointmentsPage from './pages/appointments';
 
 // Import or create placeholder pages for each route
-const Dashboard = () => <div>Dashboard Page</div>;
+
 const VisitorCheckin = () => <div>Visitor Check-in Page</div>;
-const Appointments = () => <div>Appointments Page</div>;
 const AccessLogs = () => <div>Access Logs Page</div>;
 const SecurityAlerts = () => <div>Security Alerts Page</div>;
 const RoleManagement = () => <div>Role Management Page</div>;
@@ -40,7 +41,7 @@ const App: React.FC = () => {
             />
             <Route
               path="dashboard"
-              element={<Dashboard />}
+              element={<DashboardPage />}
             />
             <Route
               path="visitors"
@@ -48,7 +49,7 @@ const App: React.FC = () => {
             />
             <Route
               path="appointments"
-              element={<Appointments />}
+              element={<AppointmentsPage />}
             />
             <Route
               path="access-log"
