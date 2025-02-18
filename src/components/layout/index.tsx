@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/layouts/GlobalLayout.tsx
 import { menuItems } from '@/configs/sidebar.config';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu } from 'antd';
@@ -13,7 +12,7 @@ const GlobalLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Find active keys based on current path
+  // Previous functions remain the same...
   const findOpenKeys = (path: string) => {
     const pathParts = path.split('/').filter(Boolean);
     if (pathParts.length > 1) {
@@ -22,7 +21,6 @@ const GlobalLayout: React.FC = () => {
     return [];
   };
 
-  // Get selected keys based on current path
   const selectedKeys = (() => {
     const pathParts = location.pathname.split('/').filter(Boolean);
     if (pathParts.length) {
@@ -31,7 +29,6 @@ const GlobalLayout: React.FC = () => {
     return ['dashboard'];
   })();
 
-  // Handle menu item click
   const onMenuClick = ({ key }: { key: string }) => {
     const menuItem = findMenuItem(menuItems, key);
     if (menuItem && !menuItem.children) {
@@ -39,7 +36,6 @@ const GlobalLayout: React.FC = () => {
     }
   };
 
-  // Recursively find a menu item by key
   const findMenuItem = (items: any[], key: string): any => {
     for (const item of items) {
       if (item.key === key) {
@@ -53,7 +49,6 @@ const GlobalLayout: React.FC = () => {
     return null;
   };
 
-  // Get full path for an item
   const getItemPath = (
     items: any[],
     targetKey: string,
@@ -94,10 +89,9 @@ const GlobalLayout: React.FC = () => {
           onClick={onMenuClick}
         />
       </Sider>
-      <Content className="overflow-auto h-full bg-[#f7fafc]">
-        <div
-          className="bg-white shadow-sm px-4 flex items-center"
-          style={{ height: 56 }}>
+      <Layout className="relative">
+        {/* Fixed header */}
+        <div className="sticky top-0 z-10 bg-white shadow-sm h-14 px-4 flex items-center">
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -110,10 +104,14 @@ const GlobalLayout: React.FC = () => {
             </span>
           </div>
         </div>
-        <div className="p-4">
-          <Outlet />
-        </div>
-      </Content>
+
+        {/* Scrollable content */}
+        <Content className="overflow-auto bg-[#f7fafc]">
+          <div className="p-4">
+            <Outlet />
+          </div>
+        </Content>
+      </Layout>
     </Layout>
   );
 };
