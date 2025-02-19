@@ -222,7 +222,7 @@ const DashboardPage: React.FC = () => {
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Company', dataIndex: 'company', key: 'company' },
     {
-      title: 'Total Visits',
+      title: 'Total Appointments',
       dataIndex: 'totalVisits',
       key: 'totalVisits',
       sorter: (a, b) => a.totalVisits - b.totalVisits,

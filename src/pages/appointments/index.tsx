@@ -32,6 +32,7 @@ import {
   fetchGuests,
   updateAppointment,
 } from './mock-apis';
+import { InviteModal } from './items';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -250,7 +251,7 @@ const AppointmentsPage: React.FC = () => {
                 icon={<PlusOutlined />}
                 onClick={handleAdd}
                 className="w-full sm:w-auto">
-                New Appointment
+                Invite
               </Button>
             </div>
           </div>
@@ -272,67 +273,12 @@ const AppointmentsPage: React.FC = () => {
         />
       </Card>
 
-      <Modal
-        title={editingId ? 'Edit Appointment' : 'New Appointment'}
+      <InviteModal
         open={modalVisible}
-        onOk={handleSubmit}
-        onCancel={() => setModalVisible(false)}
-        maskClosable={false}
-        okText={editingId ? 'Update' : 'Create'}>
-        <Form
-          form={form}
-          layout="vertical">
-          <Form.Item
-            name="guestId"
-            label="Guest"
-            rules={[{ required: true, message: 'Please select a guest' }]}>
-            <Select
-              placeholder="Select a guest"
-              showSearch
-              optionFilterProp="children">
-              {guests.map((guest) => (
-                <Option
-                  key={guest.id}
-                  value={guest.id}>
-                  {guest.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="date"
-            label="Date"
-            rules={[{ required: true, message: 'Please select a date' }]}>
-            <DatePicker className="w-full" />
-          </Form.Item>
-          <Form.Item
-            name="time"
-            label="Time"
-            rules={[{ required: true, message: 'Please select a time' }]}>
-            <DatePicker.TimePicker
-              format="HH:mm"
-              className="w-full"
-            />
-          </Form.Item>
-          <Form.Item
-            name="purpose"
-            label="Purpose"
-            rules={[{ required: true, message: 'Please enter the purpose' }]}>
-            <Input.TextArea rows={2} />
-          </Form.Item>
-          <Form.Item
-            name="status"
-            label="Status"
-            initialValue="scheduled">
-            <Select>
-              <Option value="scheduled">Scheduled</Option>
-              <Option value="completed">Completed</Option>
-              <Option value="cancelled">Cancelled</Option>
-              <Option value="noshow">No Show</Option>
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
+        onCancel={() => {
+          setModalVisible(false);
+        }}
+      />
     </div>
   );
 };
