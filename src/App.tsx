@@ -6,18 +6,15 @@ import { ProtectedRoute } from './components/common/ProtectedRotues';
 import GlobalLayout from './components/layout';
 import { AuthProvider } from './contexts/AuthContext';
 import LoginPage from './pages/login/LoginPage';
-import UserManagement from './pages/user-manage';
-import DashboardPage from './pages/dashboard';
-import AppointmentsPage from './pages/appointments';
-import AccessLogsPage from './pages/access-logs';
-import VisitorsPage from './pages/visitors';
-
-// Import or create placeholder pages for each route
-
-const SecurityAlerts = () => <div>Security Alerts Page</div>;
-const RoleManagement = () => <div>Role Management Page</div>;
+import {
+  appConfigsElements,
+  getAllRoutes,
+  getDefaultChildRoute,
+} from '@/configs/main-menu.config';
 
 const App: React.FC = () => {
+  const routes = getAllRoutes(appConfigsElements);
+
   return (
     <AuthProvider>
       <Routes>
@@ -39,45 +36,28 @@ const App: React.FC = () => {
                 />
               }
             />
-            <Route
-              path="dashboard"
-              element={<DashboardPage />}
-            />
-            <Route
-              path="visitors"
-              element={<VisitorsPage />}
-            />
-            <Route
-              path="appointments"
-              element={<AppointmentsPage />}
-            />
-            <Route
-              path="access-log"
-              element={<AccessLogsPage />}
-            />
-            <Route
-              path="security-alerts"
-              element={<SecurityAlerts />}
-            />
-            <Route path="system-management">
+
+            {/* Generate routes from configuration */}
+            {routes.map((route) => (
               <Route
-                index
-                element={
-                  <Navigate
-                    to="/system-management/user-management"
-                    replace
-                  />
-                }
+                key={route.key}
+                path={route.path?.slice(1)} // Remove leading slash
+                element={route.element}
               />
-              <Route
-                path="user-management"
-                element={<UserManagement />}
-              />
-              <Route
-                path="role-management"
-                element={<RoleManagement />}
-              />
-            </Route>
+            ))}
+
+            {/* Add redirect for system management */}
+            <Route
+              path="system-management"
+              element={
+                <Navigate
+                  to={getDefaultChildRoute('system-management') || '/dashboard'}
+                  replace
+                />
+              }
+            />
+
+            {/* 404 route */}
             <Route
               path="*"
               element={<ExceptionBase type="404" />}
