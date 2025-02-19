@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { menuItems } from '@/configs/sidebar.config';
+import { baseConfigs } from '@/configs/main-menu.config';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
@@ -29,9 +29,9 @@ const GlobalLayout: React.FC = () => {
   })();
 
   const onMenuClick = ({ key }: { key: string }) => {
-    const menuItem = findMenuItem(menuItems, key);
+    const menuItem = findMenuItem(baseConfigs, key);
     if (menuItem && !menuItem.children) {
-      navigate(getItemPath(menuItems, key));
+      navigate(getItemPath(baseConfigs, key));
     }
   };
 
@@ -95,7 +95,7 @@ const GlobalLayout: React.FC = () => {
             mode="inline"
             selectedKeys={selectedKeys}
             defaultOpenKeys={findOpenKeys(location.pathname)}
-            items={menuItems}
+            items={baseConfigs}
             className="border-r-0 h-full"
             onClick={onMenuClick}
           />
