@@ -13,10 +13,10 @@ import {
 } from '@ant-design/icons';
 import { ReactNode } from 'react';
 import DashboardPage from '../pages/dashboard';
-import VisitorsPage from '../pages/visitors';
 import AppointmentsPage from '../pages/appointments';
 import AccessLogsPage from '../pages/access-logs';
 import UserManagement from '../pages/user-manage';
+import { AllVisitorsPage } from '@/pages/visitors';
 
 // Define the type for our configuration items
 interface AppConfigItem {
@@ -58,11 +58,26 @@ export const baseConfigs: AppConfigItem[] = [
     label: 'Dashboard',
     element: <DashboardPage />,
   },
+
   {
     key: 'visitors',
     icon: <IdcardOutlined />,
-    label: 'All Visitors',
-    element: <VisitorsPage />,
+    label: 'Visitors',
+    children: [
+      {
+        key: 'all-visitors',
+        icon: <IdcardOutlined />,
+        label: 'All Visitors',
+
+        element: <AllVisitorsPage />,
+      },
+      {
+        key: 'access-log',
+        icon: <HistoryOutlined />,
+        label: 'Access Logs',
+        element: <AccessLogsPage />,
+      },
+    ],
   },
   {
     key: 'appointments',
@@ -70,12 +85,7 @@ export const baseConfigs: AppConfigItem[] = [
     label: 'Appointments',
     element: <AppointmentsPage />,
   },
-  {
-    key: 'access-log',
-    icon: <HistoryOutlined />,
-    label: 'Access Logs',
-    element: <AccessLogsPage />,
-  },
+
   {
     key: 'security-alerts',
     icon: <SafetyOutlined />,
