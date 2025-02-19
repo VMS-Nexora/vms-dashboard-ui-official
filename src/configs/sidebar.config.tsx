@@ -23,7 +23,7 @@ export const menuItems: MenuItem[] = [
   {
     key: 'visitors',
     icon: <IdcardOutlined />,
-    label: 'Visitor Check-in',
+    label: 'All Visitors',
   },
   {
     key: 'appointments',

@@ -9,11 +9,11 @@ import LoginPage from './pages/login/LoginPage';
 import UserManagement from './pages/user-manage';
 import DashboardPage from './pages/dashboard';
 import AppointmentsPage from './pages/appointments';
+import AccessLogsPage from './pages/access-logs';
+import VisitorsPage from './pages/visitors';
 
 // Import or create placeholder pages for each route
 
-const VisitorCheckin = () => <div>Visitor Check-in Page</div>;
-const AccessLogs = () => <div>Access Logs Page</div>;
 const SecurityAlerts = () => <div>Security Alerts Page</div>;
 const RoleManagement = () => <div>Role Management Page</div>;
 
@@ -45,7 +45,7 @@ const App: React.FC = () => {
             />
             <Route
               path="visitors"
-              element={<VisitorCheckin />}
+              element={<VisitorsPage />}
             />
             <Route
               path="appointments"
@@ -53,7 +53,7 @@ const App: React.FC = () => {
             />
             <Route
               path="access-log"
-              element={<AccessLogs />}
+              element={<AccessLogsPage />}
             />
             <Route
               path="security-alerts"

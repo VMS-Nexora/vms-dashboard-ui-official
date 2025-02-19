@@ -5,7 +5,6 @@ import {
   Card,
   Col,
   DatePicker,
-  Layout,
   Row,
   Segmented,
   Statistic,
@@ -14,7 +13,6 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
 
-const { Content } = Layout;
 const { RangePicker } = DatePicker;
 
 // Expanded interfaces
@@ -530,8 +528,8 @@ const DashboardPage: React.FC = () => {
   );
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Content>
+    <div style={{ minHeight: '100vh' }}>
+      <>
         <Row gutter={[16, 16]}>
           <Col
             xs={24}
@@ -726,8 +724,8 @@ const DashboardPage: React.FC = () => {
             </Card>
           </Col>
         </Row>
-      </Content>
-    </Layout>
+      </>
+    </div>
   );
 };
 

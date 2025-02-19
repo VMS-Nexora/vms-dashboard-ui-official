@@ -77,7 +77,8 @@ const GlobalLayout: React.FC = () => {
         breakpoint="lg"
         collapsedWidth="0"
         collapsed={collapsed}
-        className="bg-white shadow-md fixed h-full z-20"
+        style={{ backgroundColor: '#fff' }}
+        className="fixed h-full z-20"
         width={200}>
         <div className="flex items-center justify-center bg-white py-1 max-h-[60px]">
           {!collapsed && (
@@ -85,9 +86,7 @@ const GlobalLayout: React.FC = () => {
               <span className="font-bold text-xl bg-gradient-to-r from-[#2A3F9D] to-[#4A5FFF] bg-clip-text text-transparent">
                 NEXORA
               </span>
-              <span className="text-xs text-gray-500 mt-1">
-                Visitor management
-              </span>
+              <span className="text-xs text-gray-500">Visitor management</span>
             </div>
           )}
         </div>
@@ -104,7 +103,7 @@ const GlobalLayout: React.FC = () => {
       </Sider>
       <Layout className="relative">
         {/* Fixed header */}
-        <div className="sticky top-0 z-10 bg-white shadow-sm h-14 px-4 flex items-center max-h-[60px]">
+        <div className="sticky top-0 z-10 bg-white shadow-sm h-14 px-4 flex items-center max-h-[80px] py-2">
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
