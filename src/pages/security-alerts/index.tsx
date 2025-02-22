@@ -37,7 +37,15 @@ const { Search } = Input;
 const { Option } = Select;
 const { Text } = Typography;
 
-const alertData = [
+interface AlertData {
+  id: number;
+  camera: string;
+  severity: 'Critical' | 'High' | 'Medium' | 'Low';
+  time: string;
+  image: string;
+}
+
+const alertData: AlertData[] = [
   {
     id: 1,
     camera: 'Lobby',
@@ -75,7 +83,7 @@ const alertData = [
   },
 ];
 
-const severityColors = {
+const severityColors: Record<AlertData['severity'], string> = {
   Critical: '#ff4d4f',
   High: '#ff7a45',
   Medium: '#ffa940',
@@ -83,18 +91,18 @@ const severityColors = {
 };
 
 const chartData = Object.entries(
-  alertData.reduce((acc, { severity }) => {
+  alertData.reduce<Record<string, number>>((acc, { severity }) => {
     acc[severity] = (acc[severity] || 0) + 1;
     return acc;
   }, {})
 ).map(([name, value]) => ({ name, value }));
 
 export default function SecurityAlertsPage() {
-  const [filteredData, setFilteredData] = useState(alertData);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [filteredData, setFilteredData] = useState<AlertData[]>(alertData);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const handleSearch = (value) => {
+  const handleSearch = (value: string) => {
     setFilteredData(
       alertData.filter((item) =>
         item.camera.toLowerCase().includes(value.toLowerCase())
@@ -102,7 +110,7 @@ export default function SecurityAlertsPage() {
     );
   };
 
-  const handleFilter = (value) => {
+  const handleFilter = (value: AlertData['severity'] | undefined) => {
     setFilteredData(
       value ? alertData.filter((item) => item.severity === value) : alertData
     );
@@ -113,7 +121,7 @@ export default function SecurityAlertsPage() {
       title: 'Camera',
       dataIndex: 'camera',
       key: 'camera',
-      render: (text, record) => (
+      render: (text: string, record: AlertData) => (
         <Space>
           <CameraOutlined style={{ color: severityColors[record.severity] }} />
           <Text strong>{text}</Text>
@@ -124,7 +132,7 @@ export default function SecurityAlertsPage() {
       title: 'Time',
       dataIndex: 'time',
       key: 'time',
-      render: (text) => (
+      render: (text: string) => (
         <Space>
           <ClockCircleOutlined />
           {text}
@@ -135,7 +143,7 @@ export default function SecurityAlertsPage() {
       title: 'Severity',
       dataIndex: 'severity',
       key: 'severity',
-      render: (severity) => (
+      render: (severity: AlertData['severity']) => (
         <Badge
           color={severityColors[severity]}
           text={severity}
@@ -146,7 +154,7 @@ export default function SecurityAlertsPage() {
       title: 'Image',
       dataIndex: 'image',
       key: 'image',
-      render: (image) => (
+      render: (image: string) => (
         <Avatar
           src={image}
           shape="square"
@@ -164,7 +172,6 @@ export default function SecurityAlertsPage() {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Content>
-        {/* Statistics Cards */}
         <Row
           gutter={[16, 16]}
           style={{ marginBottom: 24 }}>
@@ -185,7 +192,6 @@ export default function SecurityAlertsPage() {
             </Col>
           ))}
         </Row>
-
         {/* Charts */}
         <Row
           gutter={[16, 16]}
@@ -242,8 +248,6 @@ export default function SecurityAlertsPage() {
             </Card>
           </Col>
         </Row>
-
-        {/* Filters and Table */}
         <Card>
           <Space style={{ marginBottom: 16 }}>
             <Search
@@ -262,7 +266,7 @@ export default function SecurityAlertsPage() {
                   key={level}
                   value={level}>
                   <Badge
-                    color={severityColors[level]}
+                    color={severityColors[level as AlertData['severity']]}
                     text={level}
                   />
                 </Option>
