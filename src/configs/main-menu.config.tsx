@@ -17,6 +17,7 @@ import AppointmentsPage from '../pages/appointments';
 import AccessLogsPage from '../pages/access-logs';
 import UserManagement from '../pages/user-manage';
 import { AllVisitorsPage } from '@/pages/visitors';
+import SecurityAlertsPage from '@/pages/security-alerts';
 
 // Define the type for our configuration items
 interface AppConfigItem {
@@ -90,7 +91,7 @@ export const baseConfigs: AppConfigItem[] = [
     key: 'security-alerts',
     icon: <SafetyOutlined />,
     label: 'Security Alerts',
-    element: <div>Security Alerts Page</div>,
+    element: <SecurityAlertsPage />,
   },
   {
     key: 'system-management',
