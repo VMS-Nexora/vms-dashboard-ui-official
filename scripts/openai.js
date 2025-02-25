@@ -10,8 +10,6 @@ async function main() {
     messages: [{ role: 'system', content: 'You are a helpful assistant.' }],
     model: 'deepseek-chat',
   });
-
-  console.log(completion.choices[0].message.content);
 }
 
 main();

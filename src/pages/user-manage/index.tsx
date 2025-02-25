@@ -1,43 +1,133 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import useUserManagement from '@/hooks/useUserMangement';
+import { User } from '@/types/user';
 import {
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
   ReloadOutlined,
   SearchOutlined,
-  SettingOutlined,
 } from '@ant-design/icons';
 import { Button, Form, Input, Modal, Select, Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import React, { useState } from 'react';
-import { mockData } from './mock-data';
+import React, { useEffect, useState } from 'react';
 
-interface UserData {
-  key: number;
-  index: number;
-  userName: string;
-  gender: 'Male' | 'Female';
-  nickName: string;
-  phoneNumber: string;
-  email: string;
-  userStatus: 'Enable' | 'Disable';
-}
-
+// User Management Component
 const UserManagement: React.FC = () => {
-  const [form] = Form.useForm();
+  const [searchForm] = Form.useForm();
+  const [editForm] = Form.useForm();
+  const [createForm] = Form.useForm();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  const columns: ColumnsType<UserData> = [
+  const {
+    users,
+    loading,
+    pagination,
+    setPagination,
+    getUsers,
+    getUser,
+    updateUser,
+    deleteUsers,
+    createUser,
+  } = useUserManagement();
+
+  // Load users when pagination changes
+  useEffect(() => {
+    getUsers();
+  }, [pagination.pageSize]);
+
+  // Handle table pagination
+  const handleTableChange = (newPagination: any) => {
+    setPagination({
+      ...pagination,
+      current: newPagination.current,
+      pageSize: newPagination.pageSize,
+    });
+  };
+
+  // Edit user
+  const handleEditUser = async (userId: string) => {
+    const user = await getUser(userId);
+    if (user) {
+      setSelectedUser(user);
+      editForm.setFieldsValue({
+        name: user.name,
+        phone_number: user.phone_number,
+        email: user.email,
+        gender: user.gender,
+      });
+      setIsEditOpen(true);
+    }
+  };
+
+  // Submit edit form
+  const handleEditSubmit = async () => {
+    try {
+      const values = await editForm.validateFields();
+      if (selectedUser?.id) {
+        await updateUser(selectedUser.id, values);
+        setIsEditOpen(false);
+        getUsers(); // Refresh the list after update
+      }
+    } catch (error) {
+      console.error('Validation failed:', error);
+    }
+  };
+
+  // Submit create form
+  const handleCreateSubmit = async () => {
+    try {
+      const values = await createForm.validateFields();
+      await createUser(values);
+      setIsCreateOpen(false);
+      createForm.resetFields();
+      getUsers(); // Refresh the list after creation
+    } catch (error) {
+      console.error('Validation failed:', error);
+    }
+  };
+
+  // Delete selected users
+  const handleDeleteSelected = async () => {
+    if (selectedRowKeys.length > 0) {
+      const success = await deleteUsers(selectedRowKeys as string[]);
+      if (success) {
+        setSelectedRowKeys([]);
+        getUsers(); // Refresh the list after deletion
+      }
+    }
+  };
+
+  // Delete a single user
+  const handleDeleteUser = async (userId: string) => {
+    const success = await deleteUsers([userId]);
+    if (success) {
+      getUsers(); // Refresh the list after deletion
+    }
+  };
+
+  // Search users
+  const handleSearch = async () => {
+    const values = await searchForm.validateFields();
+    await getUsers(values);
+    setIsSearchOpen(false);
+  };
+
+  const columns: ColumnsType<User> = [
     {
-      title: 'Index',
-      dataIndex: 'index',
-      key: 'index',
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
       width: 80,
     },
     {
       title: 'Name',
-      dataIndex: 'nickName',
-      key: 'userName',
+      dataIndex: 'name',
+      key: 'name',
       width: 150,
     },
     {
@@ -48,24 +138,18 @@ const UserManagement: React.FC = () => {
       render: (gender: string) => (
         <span
           className={`px-2 py-1 rounded ${
-            gender === 'Female'
+            gender?.toLowerCase() === 'female'
               ? 'text-red-500 bg-red-50'
               : 'text-blue-500 bg-blue-50'
           }`}>
-          {gender}
+          {gender || 'N/A'}
         </span>
       ),
     },
     {
-      title: 'Nick Name',
-      dataIndex: 'nickName',
-      key: 'nickName',
-      width: 150,
-    },
-    {
       title: 'Phone Number',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber',
+      dataIndex: 'phone_number',
+      key: 'phone_number',
       width: 150,
     },
     {
@@ -75,36 +159,36 @@ const UserManagement: React.FC = () => {
       width: 200,
     },
     {
-      title: 'User Status',
-      dataIndex: 'userStatus',
-      key: 'userStatus',
-      width: 120,
-      render: (status: string) => (
-        <span
-          className={`px-2 py-1 rounded ${
-            status === 'Enable'
-              ? 'text-green-500 bg-green-50'
-              : 'text-yellow-500 bg-yellow-50'
-          }`}>
-          {status}
-        </span>
-      ),
+      title: 'Created',
+      dataIndex: 'created',
+      key: 'created',
+      width: 170,
+      render: (created: string) => new Date(created).toLocaleString(),
+    },
+    {
+      title: 'Updated',
+      dataIndex: 'updated',
+      key: 'updated',
+      width: 170,
+      render: (updated: string) => new Date(updated).toLocaleString(),
     },
     {
       title: 'Operate',
       key: 'operate',
       width: 150,
-      render: () => (
+      render: (_, record) => (
         <Space>
           <Button
             type="link"
-            icon={<EditOutlined />}>
+            icon={<EditOutlined />}
+            onClick={() => handleEditUser(record.id)}>
             Edit
           </Button>
           <Button
             type="link"
             danger
-            icon={<DeleteOutlined />}>
+            icon={<DeleteOutlined />}
+            onClick={() => handleDeleteUser(record.id)}>
             Delete
           </Button>
         </Space>
@@ -121,12 +205,12 @@ const UserManagement: React.FC = () => {
         onCancel={() => setIsSearchOpen(false)}
         footer={null}>
         <Form
-          form={form}
+          form={searchForm}
           layout="vertical">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Form.Item
-              name="userName"
-              label="Full Name">
+              name="name"
+              label="Name">
               <Input
                 placeholder="Enter user name"
                 allowClear
@@ -147,16 +231,7 @@ const UserManagement: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              name="nickName"
-              label="Nick Name">
-              <Input
-                placeholder="Enter nick name"
-                allowClear
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="phoneNumber"
+              name="phone_number"
               label="Phone Number">
               <Input
                 placeholder="Enter phone number"
@@ -172,34 +247,126 @@ const UserManagement: React.FC = () => {
                 allowClear
               />
             </Form.Item>
-
-            <Form.Item
-              name="userStatus"
-              label="User Status">
-              <Select
-                placeholder="Select status"
-                allowClear
-                options={[
-                  { value: 'enable', label: 'Enable' },
-                  { value: 'disable', label: 'Disable' },
-                ]}
-              />
-            </Form.Item>
           </div>
 
           <div className="flex justify-end gap-2">
             <Button
               icon={<ReloadOutlined />}
-              onClick={() => form.resetFields()}>
+              onClick={() => searchForm.resetFields()}>
               Reset
             </Button>
             <Button
               type="primary"
               icon={<SearchOutlined />}
-              onClick={() => setIsSearchOpen(false)}>
+              onClick={handleSearch}>
               Search
             </Button>
           </div>
+        </Form>
+      </Modal>
+
+      {/* Edit User Modal */}
+      <Modal
+        title="Edit User"
+        open={isEditOpen}
+        onCancel={() => setIsEditOpen(false)}
+        onOk={handleEditSubmit}
+        confirmLoading={loading}>
+        <Form
+          form={editForm}
+          layout="vertical">
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: 'Please enter user name' }]}>
+            <Input placeholder="Enter user name" />
+          </Form.Item>
+
+          <Form.Item
+            name="gender"
+            label="Gender"
+            rules={[{ required: true, message: 'Please select gender' }]}>
+            <Select
+              placeholder="Select gender"
+              options={[
+                { value: 'male', label: 'Male' },
+                { value: 'female', label: 'Female' },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="phone_number"
+            label="Phone Number"
+            rules={[{ required: true, message: 'Please enter phone number' }]}>
+            <Input placeholder="Enter phone number" />
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: 'Please enter email' },
+              { type: 'email', message: 'Please enter a valid email' },
+            ]}>
+            <Input placeholder="Enter email" />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Create User Modal */}
+      <Modal
+        title="Create User"
+        open={isCreateOpen}
+        onCancel={() => setIsCreateOpen(false)}
+        onOk={handleCreateSubmit}
+        confirmLoading={loading}>
+        <Form
+          form={createForm}
+          layout="vertical">
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: 'Please enter user name' }]}>
+            <Input placeholder="Enter user name" />
+          </Form.Item>
+
+          <Form.Item
+            name="gender"
+            label="Gender"
+            rules={[{ required: true, message: 'Please select gender' }]}>
+            <Select
+              placeholder="Select gender"
+              options={[
+                { value: 'male', label: 'Male' },
+                { value: 'female', label: 'Female' },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="phone_number"
+            label="Phone Number"
+            rules={[{ required: true, message: 'Please enter phone number' }]}>
+            <Input placeholder="Enter phone number" />
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: 'Please enter email' },
+              { type: 'email', message: 'Please enter a valid email' },
+            ]}>
+            <Input placeholder="Enter email" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[{ required: true, message: 'Please enter password' }]}>
+            <Input.Password placeholder="Enter password" />
+          </Form.Item>
         </Form>
       </Modal>
 
@@ -210,11 +377,22 @@ const UserManagement: React.FC = () => {
           <Space>
             <Button
               type="primary"
-              icon={<PlusOutlined />}>
+              icon={<PlusOutlined />}
+              onClick={() => setIsCreateOpen(true)}>
               Add
             </Button>
-            <Button icon={<ReloadOutlined />}>Refresh</Button>
-            <Button icon={<SettingOutlined />}>Column Setting</Button>
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={() => getUsers()}>
+              Refresh
+            </Button>
+            <Button
+              icon={<DeleteOutlined />}
+              danger
+              disabled={selectedRowKeys.length === 0}
+              onClick={handleDeleteSelected}>
+              Delete Selected
+            </Button>
             <Button
               icon={<SearchOutlined />}
               onClick={() => setIsSearchOpen(true)}
@@ -222,9 +400,23 @@ const UserManagement: React.FC = () => {
           </Space>
         </div>
         <Table
+          rowKey="id"
+          rowSelection={{
+            selectedRowKeys,
+            onChange: setSelectedRowKeys,
+          }}
+          loading={loading}
           size="small"
-          columns={columns as any}
-          dataSource={mockData}
+          columns={columns}
+          dataSource={users}
+          pagination={{
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
+            showSizeChanger: true,
+            showTotal: (total) => `Total ${total} items`,
+          }}
+          onChange={handleTableChange}
           scroll={{ x: 'max-content', y: 'calc(100vh - 18rem)' }}
         />
       </div>

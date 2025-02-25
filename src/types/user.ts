@@ -7,7 +7,8 @@ export interface User {
   email: string;
   password: string;
   gender: string;
-  identity_card: Record<string, unknown>;
-  images: string[];
+  identity_card: string;
+  images: string;
   role_id: string;
+  is_delete?: boolean;
 }

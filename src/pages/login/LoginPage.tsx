@@ -16,17 +16,20 @@ const LoginPage: React.FC = () => {
 
   const from = location.state?.from?.pathname || '/dashboard';
 
-  const onFinish = async (values: { username: string; password: string }) => {
+  const onFinish = async (values: {
+    phone_number: string;
+    password: string;
+  }) => {
     setLoading(true);
     try {
-      const success = await login(values.username, values.password);
+      // Login now uses phone_number instead of username.
+      const success = await login(values.phone_number, values.password);
       if (success) {
         navigate(from, { replace: true });
       } else {
-        // Using more styled notification
         const antdMessage = await import('antd').then((mod) => mod.message);
         antdMessage.error({
-          content: 'Invalid username or password',
+          content: 'Invalid phone number or password',
           style: { borderRadius: '8px' },
         });
       }
@@ -71,21 +74,21 @@ const LoginPage: React.FC = () => {
           <Form
             name="login"
             layout="vertical"
-            initialValues={{ username: '', password: '' }}
+            initialValues={{ phone_number: '', password: '' }}
             onFinish={onFinish}
             autoComplete="off"
             size="large">
             <Form.Item
               label={
-                <span className="text-gray-700 font-medium">Username</span>
+                <span className="text-gray-700 font-medium">Phone Number</span>
               }
-              name="username"
+              name="phone_number"
               rules={[
-                { required: true, message: 'Please enter your username' },
+                { required: true, message: 'Please enter your phone number' },
               ]}>
               <Input
                 prefix={<UserOutlined className="text-gray-400" />}
-                placeholder="Enter your username"
+                placeholder="Enter your phone number"
                 className="rounded-lg"
               />
             </Form.Item>

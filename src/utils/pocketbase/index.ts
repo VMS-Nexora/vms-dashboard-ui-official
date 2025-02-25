@@ -167,7 +167,7 @@ export class PocketBaseProvider implements TServiceProvider {
       const options: RecordListOptions = {
         requestKey: uniqueRequestKey,
         headers: {
-          'nex-api-key': 'UMlFExY3SGhshyC2Rpk',
+          nexora_vms_api_key: 'UMlFExY3SGhshyC2Rpk',
         },
       };
 
@@ -215,7 +215,7 @@ export class PocketBaseProvider implements TServiceProvider {
       const data = await this.client.collection(resource).getOne(id, {
         requestKey: uniqueRequestKey,
         headers: {
-          'nex-api-key': 'UMlFExY3SGhshyC2Rpk',
+          nexora_vms_api_key: 'UMlFExY3SGhshyC2Rpk',
         },
       });
 
@@ -234,7 +234,7 @@ export class PocketBaseProvider implements TServiceProvider {
         .collection(resource)
         .create(variables, {
           headers: {
-            'nex-api-key': 'UMlFExY3SGhshyC2Rpk',
+            nexora_vms_api_key: 'UMlFExY3SGhshyC2Rpk',
           },
         });
 
@@ -256,7 +256,7 @@ export class PocketBaseProvider implements TServiceProvider {
         .collection(args.collection)
         .update(args.id, args.params as object, {
           headers: {
-            'nex-api-key': 'UMlFExY3SGhshyC2Rpk',
+            nexora_vms_api_key: 'UMlFExY3SGhshyC2Rpk',
           },
         });
 
@@ -272,7 +272,7 @@ export class PocketBaseProvider implements TServiceProvider {
     try {
       await this.client.collection(args.collection).delete(args.id, {
         headers: {
-          'nex-api-key': 'UMlFExY3SGhshyC2Rpk',
+          nexora_vms_api_key: 'UMlFExY3SGhshyC2Rpk',
         },
       });
 

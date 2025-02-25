@@ -1,7 +1,7 @@
 'use server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_KEY);
+const resend = new Resend('RESEND_KEY');
 
 export interface Guest {
   id: string;
