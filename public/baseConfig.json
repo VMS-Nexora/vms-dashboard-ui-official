@@ -1,0 +1,14 @@
+{
+  "software": {
+    "id": "visitor-management-001",
+    "name": "Visitor Manager System",
+    "prefix": "vms",
+    "version": "1.0.0",
+    "description": "A robust multi-tenant visitor management system for enterprises.",
+    "releaseDate": "2025-01-01",
+    "contact": {
+      "email": "support@visitormanagement.com",
+      "phone": ""
+    }
+  }
+}
