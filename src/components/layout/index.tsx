@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseConfigs } from '@/configs/main-menu.config';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { Button, Layout, Menu } from 'antd';
+import {
+  LoginOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Button, Dropdown, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 const { Sider, Content } = Layout;
@@ -11,7 +16,7 @@ const GlobalLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Previous functions remain the same...
+  // Previous helper functions
   const findOpenKeys = (path: string) => {
     const pathParts = path.split('/').filter(Boolean);
     if (pathParts.length > 1) {
@@ -69,6 +74,29 @@ const GlobalLayout: React.FC = () => {
     return '';
   };
 
+  const userMenu = (
+    <Menu
+      onClick={({ key }) => {
+        if (key === 'profile') {
+          navigate('/profile');
+        }
+        if (key === 'logout') {
+          // Handle logout logic here (e.g., clear tokens, redirect to login)
+          navigate('/login');
+        }
+      }}
+      items={[
+        { key: 'profile', label: 'Profile', icon: <UserOutlined /> },
+        {
+          key: 'logout',
+          label: 'Logout',
+          icon: <LoginOutlined />,
+          danger: true,
+        },
+      ]}
+    />
+  );
+
   return (
     <Layout className="h-screen">
       <Sider
@@ -110,10 +138,16 @@ const GlobalLayout: React.FC = () => {
             onClick={() => setCollapsed(!collapsed)}
           />
           <div className="ml-auto flex items-center gap-2">
-            <span className="hidden sm:inline">John Doe</span>
-            <span className="flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full">
-              JD
-            </span>
+            <Dropdown
+              overlay={userMenu}
+              trigger={['click']}>
+              <div className="flex items-center gap-2 cursor-pointer">
+                <span className="hidden sm:inline">John Doe</span>
+                <span className="flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full">
+                  JD
+                </span>
+              </div>
+            </Dropdown>
           </div>
         </div>
 

@@ -9,6 +9,7 @@ import GlobalLayout from './components/layout';
 import ExceptionBase from './components/common/ExceptionBase';
 import { ProtectedRoutes } from './components/common/ProtectedRoutes';
 import RegisterPage from './pages/register';
+import ProfilePage from './pages/profile';
 
 const App: React.FC = () => {
   const { getAllRoutes, getDefaultChildRoute, appConfigsElements } =
@@ -38,6 +39,10 @@ const App: React.FC = () => {
                 replace
               />
             }
+          />
+          <Route
+            path="/profile"
+            element={<ProfilePage />}
           />
 
           {/* Generate routes from configuration */}

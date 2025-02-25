@@ -20,5 +20,5 @@ export interface SQLiteDatabase {
 
 export interface VMSConfig {
   software: VMSBaseConfig;
-  dbms: SQLiteDatabase;
+  database: SQLiteDatabase;
 }
