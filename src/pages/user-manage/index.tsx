@@ -118,12 +118,12 @@ const UserManagement: React.FC = () => {
   };
 
   const columns: ColumnsType<User> = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: 80,
-    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: 'id',
+    //   key: 'id',
+    //   width: 80,
+    // },
     {
       title: 'Name',
       dataIndex: 'name',
