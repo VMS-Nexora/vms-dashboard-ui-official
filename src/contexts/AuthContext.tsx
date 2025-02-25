@@ -1,5 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
 // src/contexts/AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import Cookies from 'js-cookie';
+import React, { createContext, ReactNode, useState } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -7,12 +9,17 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Initialize isAuthenticated from the cookie synchronously
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    Cookies.get('isAuthenticated') === 'true'
+  );
 
   const login = async (
     username: string,
@@ -21,6 +28,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     // Mock authentication - replace with actual API call
     if (username === 'admin' && password === 'password') {
       setIsAuthenticated(true);
+      Cookies.set('isAuthenticated', 'true', { expires: 7 });
       return true;
     }
     return false;
@@ -28,6 +36,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = () => {
     setIsAuthenticated(false);
+    Cookies.remove('isAuthenticated');
   };
 
   return (
@@ -35,12 +44,4 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

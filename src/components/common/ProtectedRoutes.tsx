@@ -1,9 +1,9 @@
 // src/components/ProtectedRoute.tsx
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-export const ProtectedRoute: React.FC = () => {
+export const ProtectedRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 

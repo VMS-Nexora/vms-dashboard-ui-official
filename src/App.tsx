@@ -1,71 +1,73 @@
 // src/App.tsx
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import ExceptionBase from './components/common/ExceptionBase';
-import { ProtectedRoute } from './components/common/ProtectedRotues';
-import GlobalLayout from './components/layout';
-import { AuthProvider } from './contexts/AuthContext';
+
 import LoginPage from './pages/login/LoginPage';
-import {
-  appConfigsElements,
-  getAllRoutes,
-  getDefaultChildRoute,
-} from '@/configs/main-menu.config';
+import { useGenerateRoutes } from './hooks/useGenerateRoutes';
+
+import GlobalLayout from './components/layout';
+import ExceptionBase from './components/common/ExceptionBase';
+import { ProtectedRoutes } from './components/common/ProtectedRoutes';
+import RegisterPage from './pages/register';
 
 const App: React.FC = () => {
+  const { getAllRoutes, getDefaultChildRoute, appConfigsElements } =
+    useGenerateRoutes();
   const routes = getAllRoutes(appConfigsElements);
 
   return (
-    <AuthProvider>
-      <Routes>
+    <Routes>
+      <Route
+        path="/login"
+        element={<LoginPage />}
+      />
+      <Route
+        path="/register"
+        element={<RegisterPage />}
+      />
+
+      <Route element={<ProtectedRoutes />}>
         <Route
-          path="/login"
-          element={<LoginPage />}
-        />
-
-        <Route element={<ProtectedRoute />}>
+          path="/"
+          element={<GlobalLayout />}>
           <Route
-            path="/"
-            element={<GlobalLayout />}>
-            <Route
-              index
-              element={
-                <Navigate
-                  to="/dashboard"
-                  replace
-                />
-              }
-            />
-
-            {/* Generate routes from configuration */}
-            {routes.map((route) => (
-              <Route
-                key={route.key}
-                path={route.path?.slice(1)} // Remove leading slash
-                element={route.element}
+            index
+            element={
+              <Navigate
+                to="/dashboard"
+                replace
               />
-            ))}
+            }
+          />
 
-            {/* Add redirect for system management */}
+          {/* Generate routes from configuration */}
+          {routes.map((route) => (
             <Route
-              path="system-management"
-              element={
-                <Navigate
-                  to={getDefaultChildRoute('system-management') || '/dashboard'}
-                  replace
-                />
-              }
+              key={route.key}
+              path={route.path?.slice(1)} // Remove leading slash
+              element={route.element}
             />
+          ))}
 
-            {/* 404 route */}
-            <Route
-              path="*"
-              element={<ExceptionBase type="404" />}
-            />
-          </Route>
+          {/* Add redirect for system management */}
+          <Route
+            path="system-management"
+            element={
+              <Navigate
+                to={getDefaultChildRoute('system-management') || '/dashboard'}
+                replace
+              />
+            }
+          />
+
+          {/* 404 route */}
+          <Route
+            path="*"
+            element={<ExceptionBase type="404" />}
+          />
         </Route>
-      </Routes>
-    </AuthProvider>
+      </Route>
+    </Routes>
   );
 };
 
