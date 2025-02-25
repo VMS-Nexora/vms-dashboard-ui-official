@@ -1,0 +1,25 @@
+{
+  "tenant": {
+    "tid": "iuK7Lith",
+    "name": "Viettel Innovation Lab",
+    "version": "1.0.0"
+  },
+  "subscription": {
+    "plan": "premium",
+    "features": {
+      "face_recognition": true,
+      "real_time_alerts": true,
+      "multi_location_support": true,
+      "visitor_pre_registration": true,
+      "custom_branding": true
+    },
+    "valid_until": "2026-01-01"
+  },
+  "settings": {
+    "timezone": "UTC",
+    "language": "en-US",
+    "max_visitors_per_day": 500,
+    "allow_guest_checkin": true,
+    "data_retention_days": 365
+  }
+}
