@@ -10,5 +10,10 @@
       "email": "support@visitormanagement.com",
       "phone": ""
     }
+  },
+  "database": {
+    "type": "SQLite",
+    "name": "pocketbase",
+    "url": "https://eithan-bku.pockethost.io"
   }
 }

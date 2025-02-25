@@ -12,7 +12,13 @@ export interface VMSBaseConfig {
   releaseDate: string;
   contact: Contact;
 }
+export interface SQLiteDatabase {
+  type: string;
+  name: string;
+  url: string;
+}
 
 export interface VMSConfig {
   software: VMSBaseConfig;
+  dbms: SQLiteDatabase;
 }
